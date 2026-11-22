@@ -12,7 +12,7 @@
     </div>
 
     <label class="form-label" for="golUrl">Website address</label>
-    <input class="form-control mb-1" type="url" id="golUrl" placeholder="https://mahaskadrug-photos.azurewebsites.net/api/lightshow/now-playing" autocomplete="off">
+    <input class="form-control mb-1" type="url" id="golUrl" placeholder="https://mahaskadrug-social.azurewebsites.net/api/lightshow/now-playing" autocomplete="off">
     <div class="form-text mb-3">The website's now-playing address, starting https://.</div>
 
     <label class="form-label" for="golKey">Key</label>

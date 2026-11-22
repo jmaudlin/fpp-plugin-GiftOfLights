@@ -34,7 +34,7 @@ Gift of Lights page can show what is playing. The site shows it only while the s
    `https://raw.githubusercontent.com/jmaudlin/fpp-plugin-GiftOfLights/main/pluginInfo.json` into the plugin info
    box, Retrieve Plugin Info, then Install.
 2. Content Setup -> Gift of Lights - Now Playing: the website address
-   (`https://mahaskadrug-photos.azurewebsites.net/api/lightshow/now-playing`), the key (the website's
+   (`https://mahaskadrug-social.azurewebsites.net/api/lightshow/now-playing`), the key (the website's
    `LIGHTSHOW_FEED_KEY`), switch it on, Save, then Send a test song. Last sent should show the test within seconds.
 
 The source of record is `tools/fpp-plugin-GiftOfLights/` in the MahaskaDrugShopify repository; this repository is
