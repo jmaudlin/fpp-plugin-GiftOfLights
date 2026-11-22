@@ -1,0 +1,36 @@
+{
+	"repoName": "fpp-plugin-GiftOfLights",
+	"name": "Gift of Lights - Now Playing",
+	"author": "Mahaska Drug",
+	"description": "Sends the song that is playing (title, artist) and the show (playlist name) to the Gift of Lights page on mahaskadrug.com as each song starts.",
+	"homeURL": "https://github.com/jmaudlin/fpp-plugin-GiftOfLights",
+	"srcURL": "https://github.com/jmaudlin/fpp-plugin-GiftOfLights.git",
+	"bugURL": "https://github.com/jmaudlin/fpp-plugin-GiftOfLights/issues",
+	"allowUpdates": 1,
+	"releaseNotesStyle": "gitHistory",
+	"privacy": {
+		"summary": "While switched on, sends each song's title and artist and the playlist name to the website address you enter.",
+		"sends": [
+			{
+				"to": "the website address you enter",
+				"what": "song title, artist and playlist name",
+				"why": "show now playing on the Gift of Lights web page",
+				"alwaysOn": false
+			}
+		],
+		"collects": [],
+		"sensors": [],
+		"remoteAccess": "none",
+		"systemChanges": [],
+		"closedCode": false,
+		"other": "none"
+	},
+	"versions": [
+		{
+			"minFPPVersion": "7.0",
+			"maxFPPVersion": "0",
+			"branch": "main",
+			"sha": ""
+		}
+	]
+}
