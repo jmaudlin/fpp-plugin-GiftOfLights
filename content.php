@@ -17,6 +17,7 @@
 
     <label class="form-label" for="golKey">Key</label>
     <input class="form-control mb-1" type="password" id="golKey" autocomplete="new-password" placeholder="Leave blank to keep the saved key">
+    <div class="form-text mb-1" id="golKeyLen"></div>
     <div class="form-text mb-3" id="golKeyNote">The same value as the website's LIGHTSHOW_FEED_KEY setting.</div>
 
     <label class="form-label" for="golNames">Show names (optional)</label>
@@ -27,6 +28,7 @@
       <button type="button" class="buttons btn btn-success" id="golSave">Save</button>
       <button type="button" class="buttons btn btn-outline-secondary" id="golTest">Send a test song</button>
     </div>
+    <div class="mt-2 fw-semibold" id="golMsg" role="status" aria-live="polite"></div>
   </div>
 
   <div class="border rounded p-3">

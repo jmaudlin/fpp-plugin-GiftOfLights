@@ -3,7 +3,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!document.getElementById('golPage')) return;
   var API = '/api/plugin/fpp-plugin-GiftOfLights/';
   function el(id) { return document.getElementById(id); }
-  function toast(msg, ok) { window.jQuery && jQuery.jGrowl ? jQuery.jGrowl(msg, { themeState: ok ? 'success' : 'danger' }) : alert(msg); }
+  // FPP 10 can switch jGrowl popups off (js/jquery.jgrowl.disabled.js only logs them), so every message is ALSO written
+  // on the page under the buttons, where it cannot be suppressed.
+  function toast(msg, ok) {
+    var m = el('golMsg');
+    if (m) { m.textContent = msg; m.className = 'mt-2 fw-semibold ' + (ok ? 'text-success' : 'text-danger'); }
+    if (window.jQuery && jQuery.jGrowl) jQuery.jGrowl(msg, { themeState: ok ? 'success' : 'danger' });
+    else if (!m) alert(msg);
+  }
   function when(t) { return t ? new Date(t * 1000).toLocaleString() : ''; }
 
   function load() {
@@ -29,13 +36,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }).catch(function () {});
   }
 
+  // The key's length as it is typed: the website refuses a key under 16 characters, and so does Save.
+  function keyLen() {
+    var n = el('golKey').value.trim().length, out = el('golKeyLen');
+    if (!out) return;
+    out.textContent = n ? n + ' characters' + (n < 16 ? ' - needs at least 16' : '') : '';
+    out.className = 'form-text mb-1' + (n && n < 16 ? ' text-danger' : '');
+  }
+  el('golKey').addEventListener('input', keyLen);
+
   el('golSave').addEventListener('click', function () {
     var body = { enabled: el('golEnabled').checked, backendUrl: el('golUrl').value.trim(), showNames: el('golNames').value, key: el('golKey').value.trim() };
     fetch(API + 'settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (x) {
         if (!x.ok) { toast(x.j.error || 'Not saved.', false); return; }
-        el('golKey').value = '';
+        el('golKey').value = ''; keyLen();
         toast('Saved.', true);
         load();
       }).catch(function () { toast('Not saved.', false); });
