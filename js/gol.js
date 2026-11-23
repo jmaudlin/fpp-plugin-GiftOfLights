@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', function () {
   function when(t) { return t ? new Date(t * 1000).toLocaleString() : ''; }
 
   function load() {
-    fetch(API + 'settings').then(function (r) { return r.json(); }).then(function (s) {
+    fetch(API + 'config').then(function (r) { return r.json(); }).then(function (s) {
       el('golEnabled').checked = !!s.enabled;
       el('golUrl').value = s.backendUrl || '';
       el('golNames').value = s.showNames || '';
       el('golKeyNote').textContent = s.keySet
         ? 'A key is saved (ends ' + s.keyEnd + '). Type a new one only to replace it.'
         : 'No key saved yet. It must match the website\'s LIGHTSHOW_FEED_KEY setting.';
-    });
+    }).catch(function () { toast('Could not read the saved settings from FPP (' + API + 'config).', false); });
   }
 
   function status() {
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   el('golSave').addEventListener('click', function () {
     var body = { enabled: el('golEnabled').checked, backendUrl: el('golUrl').value.trim(), showNames: el('golNames').value, key: el('golKey').value.trim() };
-    fetch(API + 'settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    fetch(API + 'config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       // A reply that is not JSON (an FPP error page, a missing route) still says what happened.
       .then(function (r) { return r.text().then(function (t) { var j = null; try { j = JSON.parse(t); } catch (e) {} return { ok: r.ok && !!j, status: r.status, j: j || {} }; }); })
       .then(function (x) {

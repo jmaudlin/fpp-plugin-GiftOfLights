@@ -21,8 +21,11 @@ function fpppluginGiftOfLightsKeyFile() {
 
 function getEndpointsfpppluginGiftOfLights() {
     return array(
-        array('method' => 'GET', 'endpoint' => 'settings', 'callback' => 'fpppluginGiftOfLightsGetSettings'),
-        array('method' => 'POST', 'endpoint' => 'settings', 'callback' => 'fpppluginGiftOfLightsSaveSettings'),
+        // 'config', never 'settings': FPP 10 registers /plugin/:RepoName/settings/:SettingName first, and that route
+        // also matches /plugin/<repo>/settings with the name empty, so a plugin 'settings' endpoint is never reached
+        // (FPP answers 'Invalid setting name.').
+        array('method' => 'GET', 'endpoint' => 'config', 'callback' => 'fpppluginGiftOfLightsGetSettings'),
+        array('method' => 'POST', 'endpoint' => 'config', 'callback' => 'fpppluginGiftOfLightsSaveSettings'),
         array('method' => 'GET', 'endpoint' => 'status', 'callback' => 'fpppluginGiftOfLightsStatus'),
         array('method' => 'POST', 'endpoint' => 'test', 'callback' => 'fpppluginGiftOfLightsTest'),
     );
