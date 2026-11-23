@@ -48,13 +48,14 @@ document.addEventListener('DOMContentLoaded', function () {
   el('golSave').addEventListener('click', function () {
     var body = { enabled: el('golEnabled').checked, backendUrl: el('golUrl').value.trim(), showNames: el('golNames').value, key: el('golKey').value.trim() };
     fetch(API + 'settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      // A reply that is not JSON (an FPP error page, a missing route) still says what happened.
+      .then(function (r) { return r.text().then(function (t) { var j = null; try { j = JSON.parse(t); } catch (e) {} return { ok: r.ok && !!j, status: r.status, j: j || {} }; }); })
       .then(function (x) {
-        if (!x.ok) { toast(x.j.error || 'Not saved.', false); return; }
+        if (!x.ok) { toast(x.j.error || ('Not saved: FPP answered HTTP ' + x.status + ' to ' + API + 'settings.'), false); return; }
         el('golKey').value = ''; keyLen();
         toast('Saved.', true);
         load();
-      }).catch(function () { toast('Not saved.', false); });
+      }).catch(function (e) { toast('Not saved: ' + (e && e.message ? e.message : 'no answer from FPP') + '.', false); });
   });
 
   el('golTest').addEventListener('click', function () {

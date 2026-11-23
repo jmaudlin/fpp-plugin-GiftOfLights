@@ -65,18 +65,28 @@ function fpppluginGiftOfLightsSaveSettings() {
         http_response_code(400);
         return json(array('error' => 'The key must be 16 to 200 characters with no spaces.'));
     }
-    WriteSettingToFile('BackendUrl', $url, 'fpp-plugin-GiftOfLights');
-    WriteSettingToFile('Enabled', empty($in['enabled']) ? '0' : '1', 'fpp-plugin-GiftOfLights');
-    WriteSettingToFile('ShowNames', implode('|', array_slice($lines, 0, 50)), 'fpp-plugin-GiftOfLights');
+    // FPP 10's WriteSettingToFile returns false (and only logs) when it cannot write; say so on the page.
+    $cfg = 'plugin.fpp-plugin-GiftOfLights in the config folder';
+    foreach (array(
+        array('BackendUrl', $url),
+        array('Enabled', empty($in['enabled']) ? '0' : '1'),
+        array('ShowNames', implode('|', array_slice($lines, 0, 50))),
+    ) as $kv) {
+        if (WriteSettingToFile($kv[0], $kv[1], 'fpp-plugin-GiftOfLights') === false) {
+            http_response_code(500);
+            return json(array('error' => 'Not saved: FPP could not write ' . $kv[0] . ' to ' . $cfg . '. See FPP\'s Apache error log.'));
+        }
+    }
     if ($key !== '') {
         $dir = fpppluginGiftOfLightsDataDir();
-        if (!is_dir($dir)) {
-            @mkdir($dir, 0700, true);
+        if (!is_dir($dir) && !@mkdir($dir, 0700, true)) {
+            http_response_code(500);
+            return json(array('error' => 'Not saved: could not make the folder ' . $dir . ' (the web server cannot write there).'));
         }
         $file = fpppluginGiftOfLightsKeyFile();
-        if (file_put_contents($file, $key) === false) {
+        if (@file_put_contents($file, $key) === false) {
             http_response_code(500);
-            return json(array('error' => 'Could not save the key.'));
+            return json(array('error' => 'Not saved: could not write the key to ' . $file . ' (the web server cannot write there).'));
         }
         @chmod($file, 0600);
     }
